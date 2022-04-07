@@ -1,0 +1,26 @@
+name: Prisma Cloud IaC Scan
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  prisma_cloud_iac_scan:
+    runs-on: [self-hosted, ubuntu-latest]
+    name: Run Prisma Cloud IaC scan to check CloudFormation templates
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Run Bridgecrew
+        id: Bridgecrew
+        uses: bridgecrewio/bridgecrew-action@master
+        env:
+          PRISMA_API_URL: https://api.sg.prismacloud.io
+          with:
+            api-key: ${{ secrets.BC_API_KEY }}
